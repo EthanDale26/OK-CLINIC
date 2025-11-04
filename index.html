@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Veterinary Clinic Management - testing</title>
+  <style>
+    :root{--accent:#2B6CB0;--muted:#666}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; margin:0; background:#f6f8fb; color:#111}
+    header{background:var(--accent); color:white; padding:14px 20px; display:flex; align-items:center; justify-content:space-between}
+    header h1{font-size:18px; margin:0}
+    nav{display:flex; gap:8px}
+    button.tab{background:transparent;border:1px solid rgba(255,255,255,0.12);color:white;padding:8px 12px;border-radius:8px;cursor:pointer}
+    main{padding:18px; max-width:1100px; margin:18px auto}
+    .card{background:white;border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(20,20,40,0.06); margin-bottom:18px}
+    form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+    label{font-size:13px;color:var(--muted)}
+    input,select,textarea{padding:8px;border-radius:8px;border:1px solid #e2e8f0}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left;font-size:14px}
+    .actions button{margin-right:6px}
+    .small{font-size:12px;color:var(--muted)}
+    .grid-2{display:grid;grid-template-columns:1fr 420px;gap:12px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#edf2ff;color:#2b6cb0;font-weight:600}
+    footer{padding:10px;text-align:center;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OK Clinic — Veterinary Management (TEST)</h1>
+    <nav>
+      <button class="tab" data-view="patients">Patients & Owners</button>
+      <button class="tab" data-view="appointments">Appointments</button>
+      <button class="tab" data-view="billing">Billing & Payments</button>
+      <button class="tab" data-view="staff">Staff & Users</button>
+      <button class="tab" id="checkReminders">Check Reminders</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Patients & Owners -->
+    <section id="patients" class="card">
+      <h2>1. Patient & Owner Management</h2>
+      <p class="small">Register pets and their owners, manage details and medical history.</p>
+
+      <div class="grid-2">
+        <div>
+          <form id="ownerPetForm">
+            <div>
+              <label>Owner Name</label>
+              <input required id="ownerName" placeholder="e.g., Kate Almonte" />
+            </div>
+            <div>
+              <label>Owner Contact</label>
+              <input id="ownerContact" placeholder="phone or email" />
+            </div>
+            <div>
+              <label>Pet Name</label>
+              <input required id="petName" placeholder="e.g., Bubbles" />
+            </div>
+            <div>
+              <label>Species</label>
+              <select id="petSpecies"><option>Dog</option><option>Cat</option><option>Other</option></select>
+            </div>
+            <div>
+              <label>Breed</label>
+              <input id="petBreed" placeholder="Breed or mix" />
+            </div>
+            <div>
+              <label>Age (yrs)</label>
+              <input type="number" min="0" id="petAge" />
+            </div>
+            <div>
+              <label>Weight (kg)</label>
+              <input type="number" step="0.1" min="0" id="petWeight" />
+            </div>
+            <div style="grid-column:1/ -1">
+              <label>Vaccination Records (comma separated)</label>
+              <input id="petVax" placeholder="e.g., Rabies 2024-05-12, Distemper 2023-11-01" />
+            </div>
+            <div style="grid-column:1/ -1">
+              <label>Notes / Medical History (short)</label>
+              <textarea id="petNotes" rows="3"></textarea>
+            </div>
+            <div style="grid-column:1/ -1; text-align:right">
+              <button type="submit">Register Pet</button>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <h3>Registered Pets</h3>
+          <table id="petsTable"><thead><tr><th>Pet</th><th>Owner</th><th>Species / Age</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Appointments -->
+    <section id="appointments" class="card" style="display:none">
+      <h2>2. Appointment & Scheduling</h2>
+      <p class="small">Book, update, or cancel appointments. Reminders supported (browser notifications or on-page alerts).</p>
+
+      <form id="apptForm">
+        <div>
+          <label>Pet</label>
+          <select id="apptPet"></select>
+        </div>
+        <div>
+          <label>Date & Time</label>
+          <input type="datetime-local" id="apptDate" />
+        </div>
+        <div>
+          <label>Purpose</label>
+          <input id="apptPurpose" placeholder="Consultation / Vaccination / Surgery" />
+        </div>
+        <div>
+          <label>Notes</label>
+          <input id="apptNotes" />
+        </div>
+        <div style="grid-column:1/-1; text-align:right">
+          <button type="submit">Book Appointment</button>
+        </div>
+      </form>
+
+      <div style="margin-top:12px">
+        <h3>Upcoming Appointments</h3>
+        <table id="apptTable"><thead><tr><th>When</th><th>Pet</th><th>Owner</th><th>Purpose</th><th>Actions</th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+
+    <!-- Billing -->
+    <section id="billing" class="card" style="display:none">
+      <h2>3. Billing & Payments</h2>
+      <p class="small">Generate invoices and record payments.</p>
+      <form id="invoiceForm">
+        <div>
+          <label>Pet</label>
+          <select id="invoicePet"></select>
+        </div>
+        <div>
+          <label>Amount (PHP)</label>
+          <input type="number" id="invoiceAmount" min="0" step="0.01" />
+        </div>
+        <div>
+          <label>Description</label>
+          <input id="invoiceDesc" />
+        </div>
+        <div style="grid-column:1/-1; text-align:right">
+          <button type="submit">Create Invoice</button>
+        </div>
+      </form>
+
+      <h3 style="margin-top:12px">Invoices</h3>
+      <table id="invoiceTable"><thead><tr><th>Invoice #</th><th>Pet</th><th>Owner</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <!-- Staff -->
+    <section id="staff" class="card" style="display:none">
+      <h2>4. Staff & User Management</h2>
+      <p class="small">Assign roles and manage user schedules.</p>
+      <form id="userForm">
+        <div>
+          <label>Full Name</label>
+          <input id="userName" />
+        </div>
+        <div>
+          <label>Role</label>
+          <select id="userRole"><option>admin</option><option>staff</option><option>reception</option></select>
+        </div>
+        <div>
+          <label>Schedule / Note</label>
+          <input id="userSchedule" placeholder="e.g., Mon-Fri 8:00-17:00" />
+        </div>
+        <div style="grid-column:1/-1; text-align:right">
+          <button type="submit">Add User</button>
+        </div>
+      </form>
+
+      <h3 style="margin-top:12px">Users</h3>
+      <table id="usersTable"><thead><tr><th>Name</th><th>Role</th><th>Schedule</th><th>Actions</th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <footer class="card small">BETA PANI ANIMAL</footer>
+  </main>
+
+  <script>
+    // Simple localStorage-backed "database"
+    const DB = {
+      pets: JSON.parse(localStorage.getItem('pets')||'[]'),
+      owners: JSON.parse(localStorage.getItem('owners')||'[]'),
+      appointments: JSON.parse(localStorage.getItem('appointments')||'[]'),
+      invoices: JSON.parse(localStorage.getItem('invoices')||'[]'),
+      users: JSON.parse(localStorage.getItem('users')||'[]')
+    };
+
+    function saveDB(){
+      localStorage.setItem('pets', JSON.stringify(DB.pets));
+      localStorage.setItem('owners', JSON.stringify(DB.owners));
+      localStorage.setItem('appointments', JSON.stringify(DB.appointments));
+      localStorage.setItem('invoices', JSON.stringify(DB.invoices));
+      localStorage.setItem('users', JSON.stringify(DB.users));
+    }
+
+    // Navigation
+    document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click', ()=>{
+      const view = b.dataset.view;
+      if(view) showView(view);
+    }));
+    function showView(v){
+      ['patients','appointments','billing','staff'].forEach(id=>{
+        document.getElementById(id).style.display = (id===v)?'block':'none';
+      });
+    }
+
+    // Register owner + pet
+    document.getElementById('ownerPetForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const ownerName = document.getElementById('ownerName').value.trim();
+      const ownerContact = document.getElementById('ownerContact').value.trim();
+      let owner = DB.owners.find(o=>o.name===ownerName && o.contact===ownerContact);
+      if(!owner){ owner = {id:Date.now()+Math.random(), name:ownerName, contact:ownerContact}; DB.owners.push(owner); }
+      const pet = {
+        id: Date.now()+Math.random(),
+        ownerId: owner.id,
+        name: document.getElementById('petName').value.trim(),
+        species: document.getElementById('petSpecies').value,
+        breed: document.getElementById('petBreed').value.trim(),
+        age: Number(document.getElementById('petAge').value)||0,
+        weight: Number(document.getElementById('petWeight').value)||0,
+        vaccines: document.getElementById('petVax').value.split(',').map(s=>s.trim()).filter(Boolean),
+        notes: document.getElementById('petNotes').value.trim()
+      };
+      DB.pets.push(pet);
+      saveDB();
+      document.getElementById('ownerPetForm').reset();
+      renderPets(); renderPetSelects();
+      alert('Registered '+pet.name+' for owner '+owner.name);
+    });
+
+    function renderPets(){
+      const tbody = document.querySelector('#petsTable tbody'); tbody.innerHTML='';
+      DB.pets.forEach(p=>{
+        const owner = DB.owners.find(o=>o.id===p.ownerId)||{name:'(unknown)'};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><strong>${p.name}</strong><div class="small">${p.breed || ''}</div></td>
+                        <td>${owner.name}<div class="small">${owner.contact||''}</div></td>
+                        <td>${p.species} • ${p.age} yr</td>
+                        <td class="actions">
+                          <button onclick='viewPet("${p.id}")'>View</button>
+                          <button onclick='deletePet("${p.id}")'>Delete</button>
+                        </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.viewPet = (id)=>{
+      const p = DB.pets.find(x=>String(x.id)===String(id));
+      if(!p) return alert('Not found');
+      const o = DB.owners.find(x=>x.id===p.ownerId) || {};
+      alert(`Pet: ${p.name}\nOwner: ${o.name || ''}\nSpecies: ${p.species}\nBreed: ${p.breed}\nAge: ${p.age}\nWeight: ${p.weight}\nVaccines: ${p.vaccines.join('; ')}\nNotes: ${p.notes}`);
+    }
+    window.deletePet = (id)=>{
+      if(!confirm('Delete this pet?')) return;
+      DB.pets = DB.pets.filter(x=>String(x.id)!==String(id));
+      saveDB(); renderPets(); renderPetSelects();
+    }
+
+    // Appointment handling
+    const apptForm = document.getElementById('apptForm');
+    apptForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      const petId = document.getElementById('apptPet').value;
+      const dt = document.getElementById('apptDate').value;
+      if(!petId || !dt) return alert('Select pet and date/time');
+      const appt = { id:Date.now()+Math.random(), petId, when:dt, purpose:document.getElementById('apptPurpose').value, notes:document.getElementById('apptNotes').value, created: new Date().toISOString() };
+      DB.appointments.push(appt); saveDB(); renderAppointments(); apptForm.reset(); alert('Appointment booked');
+    });
+
+    function renderAppointments(){
+      const tbody = document.querySelector('#apptTable tbody'); tbody.innerHTML='';
+      DB.appointments.sort((a,b)=> new Date(a.when)-new Date(b.when)).forEach(a=>{
+        const pet = DB.pets.find(p=>String(p.id)===String(a.petId))||{};
+        const owner = DB.owners.find(o=>o.id===pet.ownerId)||{};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${new Date(a.when).toLocaleString()}</td><td>${pet.name||'(deleted)'}</td><td>${owner.name||''}</td><td>${a.purpose||''}</td>
+                        <td class="actions"><button onclick='editAppt("${a.id}")'>Edit</button><button onclick='cancelAppt("${a.id}")'>Cancel</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    window.cancelAppt = id=>{ if(!confirm('Cancel appointment?')) return; DB.appointments = DB.appointments.filter(x=>String(x.id)!==String(id)); saveDB(); renderAppointments(); }
+    window.editAppt = id=>{
+      const a = DB.appointments.find(x=>String(x.id)===String(id));
+      if(!a) return alert('Not found');
+      document.getElementById('apptPet').value = a.petId;
+      document.getElementById('apptDate').value = a.when;
+      document.getElementById('apptPurpose').value = a.purpose;
+      document.getElementById('apptNotes').value = a.notes;
+      // remove original so submitting creates new one (simpler demo)
+      DB.appointments = DB.appointments.filter(x=>String(x.id)!==String(id)); saveDB(); renderAppointments();
+    }
+
+    // Billing
+    document.getElementById('invoiceForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const petId = document.getElementById('invoicePet').value; const amount = Number(document.getElementById('invoiceAmount').value)||0;
+      if(!petId || !amount) return alert('Select pet and amount');
+      const inv = { id: 'INV'+Date.now(), petId, amount, desc:document.getElementById('invoiceDesc').value, paid:false, date:new Date().toISOString() };
+      DB.invoices.push(inv); saveDB(); renderInvoices(); document.getElementById('invoiceForm').reset(); alert('Invoice created');
+    });
+
+    function renderInvoices(){
+      const tbody = document.querySelector('#invoiceTable tbody'); tbody.innerHTML='';
+      DB.invoices.forEach(inv=>{
+        const pet = DB.pets.find(p=>String(p.id)===String(inv.petId))||{}; const owner = DB.owners.find(o=>o.id===pet.ownerId)||{};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${inv.id}</td><td>${pet.name||''}</td><td>${owner.name||''}</td><td>₱ ${inv.amount.toFixed(2)}</td><td>${inv.paid?'<span class="pill">Paid</span>':'<span class="pill" style="background:#fff6e6;color:#b26b00">Unpaid</span>'}</td>
+                        <td class="actions">${inv.paid? '': `<button onclick='markPaid("${inv.id}")'>Mark Paid</button>`} <button onclick='printInv("${inv.id}")'>View</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    window.markPaid = id=>{ const inv = DB.invoices.find(x=>x.id===id); if(inv){ inv.paid=true; saveDB(); renderInvoices(); alert('Payment recorded'); } }
+    window.printInv = id=>{ const inv = DB.invoices.find(x=>x.id===id); if(!inv) return; const pet = DB.pets.find(p=>String(p.id)===String(inv.petId))||{}; const owner = DB.owners.find(o=>o.id===pet.ownerId)||{}; const txt = `Invoice ${inv.id}\nPet: ${pet.name}\nOwner: ${owner.name}\nAmount: ₱ ${inv.amount.toFixed(2)}\nStatus: ${inv.paid?'Paid':'Unpaid'}\nDescription: ${inv.desc||''}`; alert(txt); }
+
+    // Users / Staff
+    document.getElementById('userForm').addEventListener('submit', e=>{ e.preventDefault(); const u={id:Date.now()+Math.random(), name:document.getElementById('userName').value.trim(), role:document.getElementById('userRole').value, schedule:document.getElementById('userSchedule').value}; DB.users.push(u); saveDB(); renderUsers(); document.getElementById('userForm').reset(); })
+    function renderUsers(){ const tbody=document.querySelector('#usersTable tbody'); tbody.innerHTML=''; DB.users.forEach(u=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${u.name}</td><td>${u.role}</td><td>${u.schedule||''}</td><td class="actions"><button onclick='deleteUser("${u.id}")'>Delete</button></td>`; tbody.appendChild(tr); }) }
+    window.deleteUser = id=>{ if(!confirm('Delete user?')) return; DB.users=DB.users.filter(x=>String(x.id)!==String(id)); saveDB(); renderUsers(); }
+
+    // Helpers
+    function renderPetSelects(){
+      const lists = ['apptPet','invoicePet'];
+      lists.forEach(id=>{
+        const sel = document.getElementById(id); if(!sel) return; sel.innerHTML = '<option value="">-- select pet --</option>' + DB.pets.map(p=>`<option value="${p.id}">${p.name} (${p.species})</option>`).join('');
+      });
+    }
+
+    // Reminders: checks for appointments within next 48 hours
+    async function checkReminders(){
+      const now = new Date(); const soon = new Date(now.getTime() + 48*60*60*1000);
+      const upcoming = DB.appointments.filter(a=>{ const d=new Date(a.when); return d>now && d<=soon; }).sort((a,b)=>new Date(a.when)-new Date(b.when));
+      if(upcoming.length===0) return alert('No upcoming appointments in the next 48 hours.');
+      // Try browser notifications
+      if('Notification' in window && Notification.permission!=='denied'){
+        if(Notification.permission!=='granted') await Notification.requestPermission();
+      }
+      upcoming.forEach(a=>{
+        const pet = DB.pets.find(p=>String(p.id)===String(a.petId))||{}; const owner = DB.owners.find(o=>o.id===pet.ownerId)||{};
+        const msg = `${pet.name} — ${a.purpose || 'Visit'} at ${new Date(a.when).toLocaleString()} (Owner: ${owner.name || ''})`;
+        if('Notification' in window && Notification.permission==='granted'){
+          new Notification('Appointment Reminder', { body: msg });
+        } else {
+          // add to a simple on-page list
+          alert('Reminder: '+msg);
+        }
+      });
+    }
+
+    document.getElementById('checkReminders').addEventListener('click', ()=>checkReminders());
+
+    // Initial render
+    renderPets(); renderPetSelects(); renderAppointments(); renderInvoices(); renderUsers();
+
+    // Seed demo data if empty
+    if(!DB.pets.length){
+      const o={id:1,name:'Juan Dela Cruz',contact:'0917-000-0000'}; DB.owners.push(o);
+      DB.pets.push({id:11,ownerId:1,name:'Rex',species:'Dog',breed:'Mix',age:3,weight:12.4,vaccines:['Rabies 2024-04-02'],notes:'Allergic to bee stings'});
+      DB.users.push({id:100,name:'Clinic Admin',role:'admin',schedule:'Mon-Fri 8-17'});
+      saveDB(); renderPets(); renderPetSelects(); renderAppointments(); renderInvoices(); renderUsers();
+    }
+
+  </script>
+</body>
+</html>
