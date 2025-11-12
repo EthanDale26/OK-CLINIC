@@ -54,8 +54,8 @@ Through this project, we aim to enhance digital efficiency in veterinary care wh
 
 - ✅ Team meeting to finalize topic
 - ✅ Complete Chapter 1 & 2 of proposal
-- [ ] Create and commit `api.yaml` with endpoints
-- [ ] Push all files to GitHub
+- ✅ Create and commit `api.yaml` with endpoints
+- ✅ Push all files to GitHub
 
 ---
 
@@ -78,7 +78,7 @@ Through this project, we aim to enhance digital efficiency in veterinary care wh
 **Checklist:**
 
 - [ ] Chapter 3 completed
-- [ ] Repo created + dependencies installed
+- ✅ Repo created + dependencies installed
 - [ ] `/patients` and `/doctors` endpoints working
 - [ ] Updated API documentation
 - [ ] Commits pushed to GitHub
