@@ -81,9 +81,9 @@ Through this project, we aim to enhance digital efficiency in veterinary care wh
 **Checklist:**
 
 - ✅ Repo created + dependencies installed
-- 🟠 `/patients` and `/doctors` and endpoints working (ONGOING)
-- 🟠 Updated API documentation
-- 🟠 Commits pushed to GitHub
+- ✅ `/patients` and `/doctors` and endpoints working
+- ✅ Updated API documentation
+- ✅ Commits pushed to GitHub
 
 ---
 
@@ -106,9 +106,9 @@ Through this project, we aim to enhance digital efficiency in veterinary care wh
 
 - 🟠 All endpoints implemented (CURRENTLY IMPLEMENTED THE FF: PET PATIENTS, OWNERS, MEDICAL RECORDS, AND APPOINTMENTS)
 - 🟠 Authentication & validation added
-- [ ] Firebase integration tested* (this might be scrapped because we found out that we can do authentication in MongoDB)
-- [ ] Seed data ready
-- [ ] OpenAPI validated
+- ✅ MongoDB integration tested
+- ✅ Seed data ready (found in ITCC 33 Milestone 3 document)
+- 🟠 OpenAPI validated
 
 ---
 
@@ -127,11 +127,11 @@ Through this project, we aim to enhance digital efficiency in veterinary care wh
 
 **Checklist:**
 
-- [ ] Frontend lists patient and appointment data
-- [ ] Appointment creation & updates functional
-- [ ] Billing interface connected
-- [ ] UI handles loading/errors
-- [ ] Run instructions documented
+- ✅ Frontend lists patient and appointment data
+- ✅ Appointment creation & updates functional
+- ✅ Billing interface connected
+- ✅ UI handles loading/errors
+- ✅ Run instructions documented
 
 ---
 
@@ -152,10 +152,10 @@ Through this project, we aim to enhance digital efficiency in veterinary care wh
 
 **Checklist:**
 
-- [ ] Backend deployed
-- [ ] Frontend deployed on Netlify
-- [ ] Dockerfile builds successfully
-- [ ] README updated with deployment steps
+- 🟠 Backend deployed
+- 🟠 Frontend deployed on Netlify
+- 🟠 Dockerfile builds successfully
+- 🟠 README updated with deployment steps
 
 ---
 
